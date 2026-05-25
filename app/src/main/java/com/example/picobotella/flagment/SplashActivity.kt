@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 class SplashActivity : AppCompatActivity() {
 
     companion object {
-        private const val SPLASH_DURATION = 3000L
+        private const val SPLASH_DURATION = 5000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
