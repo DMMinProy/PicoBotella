@@ -1,14 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <!-- Fondo de madera -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/fondo_home"
+        android:scaleType="centerCrop" />
+
+    <!-- Botella girada en el centro -->
+    <ImageView
+        android:id="@+id/imgBotella"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/bottel"
+        android:rotation="-25"
+        android:scaleType="fitCenter" />
+
+    <!-- Número del jugador sobre la botella -->
+    <TextView
+        android:id="@+id/tvNumeroJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="40dp"
+        android:text="2"
+        android:textColor="#FF0000"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <!-- Botón circular rojo -->
+    <Button
+        android:id="@+id/btnGirar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/btn_circular_rojo" />
+
+    <!-- Texto debajo del botón -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hola mundo!!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:text="Presióname"
+        android:textColor="#000000"
+        android:textSize="14sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
