@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Sonido activado -->
+    <item android:drawable="@drawable/ic_sound"
+        android:state_checked="true" />
+    <!-- Sonido desactivado -->
+    <item android:drawable="@drawable/ic_sound_off" />
+</selector>

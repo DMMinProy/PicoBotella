@@ -13,6 +13,7 @@ import android.widget.ImageButton
 class HomeFragment : Fragment() {
 
     private var mediaPlayer: MediaPlayer? = null
+    private var sonidoActivado = true  // ← estado inicial del sonido
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,9 +37,23 @@ class HomeFragment : Fragment() {
 
         // Iniciar música
         mediaPlayer = MediaPlayer.create(requireContext(), R.raw.musica_home)
-        mediaPlayer?.isLooping = true  // se repite en bucle
+        mediaPlayer?.isLooping = true
         mediaPlayer?.start()
 
+        // Botón sonido
+        val btnSonido = view.findViewById<ImageButton>(R.id.btnSonido)
+        btnSonido.setOnClickListener {
+            sonidoActivado = !sonidoActivado
+            if (sonidoActivado) {
+                btnSonido.setImageResource(R.drawable.ic_sound)
+                mediaPlayer?.start()
+            } else {
+                btnSonido.setImageResource(R.drawable.ic_sound_off)
+                mediaPlayer?.pause()
+            }
+        }
+
+        // Animación press en botones de navegación
         val botones = listOf(
             view.findViewById<ImageButton>(R.id.btnEstrella),
             view.findViewById<ImageButton>(R.id.btnSonido),
@@ -77,7 +92,10 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mediaPlayer?.start()
+        // Solo reanuda si el sonido está activado
+        if (sonidoActivado) {
+            mediaPlayer?.start()
+        }
     }
 
     override fun onDestroyView() {
@@ -86,5 +104,4 @@ class HomeFragment : Fragment() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
-
 }
