@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import android.view.MotionEvent
 import android.widget.ImageButton
+import androidx.navigation.fragment.findNavController
 
 class HomeFragment : Fragment() {
 
@@ -61,6 +62,10 @@ class HomeFragment : Fragment() {
             view.findViewById<ImageButton>(R.id.btnAgregar),
             view.findViewById<ImageButton>(R.id.btnCompartir)
         )
+        // Navegar a retos
+        view.findViewById<ImageButton>(R.id.btnAgregar).setOnClickListener {
+            findNavController().navigate(R.id.challengeFragment)
+        }
 
         botones.forEach { boton ->
             boton.setOnTouchListener { v, event ->
