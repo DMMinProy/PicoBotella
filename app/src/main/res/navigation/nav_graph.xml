@@ -10,16 +10,26 @@
         android:id="@+id/homeFragment"
         android:name="com.example.picobotella.HomeFragment"
         android:label="Home">
+
+        <!-- Acción: ir a Instrucciones -->
+        <action
+            android:id="@+id/action_homeFragment_to_instruccionesFragment"
+            app:destination="@id/instruccionesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/challengeFragment"
         android:name="com.example.picobotella.ChallengeFragment"
         android:label="Retos"
         tools:layout="@layout/fragment_challenge" />
-    <!-- otra pantallla
+
+    <!-- Instrucciones del juego -->
     <fragment
-        android:id="@+id/juegoFragment"
-        android:name="com.example.picobotella.JuegoFragment"
-        android:label="Juego" />
-     -->
+        android:id="@+id/instruccionesFragment"
+        android:name="com.example.picobotella.InstruccionesFragment"
+        android:label="Instrucciones" />
+
 </navigation>

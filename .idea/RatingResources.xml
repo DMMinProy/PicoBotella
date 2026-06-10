@@ -1,0 +1,184 @@
+<!-- ══════════════════════════════════════════════════════════════
+     ARCHIVO 1: res/values/rating_colors.xml
+     Agrega estos colores a tu colors.xml o crea este archivo nuevo
+════════════════════════════════════════════════════════════════ -->
+<!--
+<resources>
+    <color name="rating_primary">#7B2FF7</color>       <!-- Púrpura Nequi -->
+    <color name="rating_text_primary">#1A1A2E</color>
+    <color name="rating_text_secondary">#6B7280</color>
+    <color name="rating_red">#EF4444</color>
+    <color name="rating_yellow">#F59E0B</color>
+    <color name="rating_green">#10B981</color>
+    <color name="rating_ripple">#1A7B2FF7</color>
+    <color name="rating_sheet_bg">#FFFFFF</color>
+</resources>
+-->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARCHIVO 2: res/values/rating_themes.xml
+     Agrega este estilo a tu themes.xml o styles.xml
+════════════════════════════════════════════════════════════════ -->
+<!--
+<resources>
+    <style name="RatingBottomSheetTheme"
+        parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RatingBottomSheetStyle</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="RatingBottomSheetStyle"
+        parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/rating_sheet_bg</item>
+        <item name="behavior_peekHeight">0dp</item>
+        <item name="android:elevation">16dp</item>
+        <item name="shapeAppearanceOverlay">@style/RatingSheetShape</item>
+    </style>
+
+    <style name="RatingSheetShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeTopRight">24dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+</resources>
+-->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARCHIVO 3: res/drawable/bg_bottom_sheet_rating.xml
+════════════════════════════════════════════════════════════════ -->
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/rating_sheet_bg" />
+    <corners
+        android:topLeftRadius="24dp"
+        android:topRightRadius="24dp" />
+</shape>
+-->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARCHIVO 4: res/drawable/bg_handle.xml
+════════════════════════════════════════════════════════════════ -->
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#E0E0E0" />
+    <corners android:radius="2dp" />
+</shape>
+-->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARCHIVO 5: res/drawable/bg_star_ripple.xml
+     Efecto ripple al tocar cada estrella
+════════════════════════════════════════════════════════════════ -->
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/rating_ripple">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</ripple>
+-->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARCHIVO 6: res/drawable/ic_star_filled.xml
+     Estrella rellena (Vector Asset)
+════════════════════════════════════════════════════════════════ -->
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M12,17.27L18.18,21l-1.64,-7.03L22,9.24l-7.19,-0.61L12,2 9.19,8.63 2,9.24l5.46,4.73L5.82,21z"/>
+</vector>
+-->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARCHIVO 7: res/drawable/ic_star_empty.xml
+     Estrella vacía (Vector Asset)
+════════════════════════════════════════════════════════════════ -->
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#D1D5DB"
+        android:pathData="M22,9.24l-7.19,-0.62L12,2 9.19,8.63 2,9.24l5.46,4.73L5.82,21 12,17.27 18.18,21l-1.63,-7.03L22,9.24zM12,15.4l-3.76,2.27 1,-4.28 -3.32,-2.88 4.38,-0.38L12,6.1l1.71,4.04 4.38,0.38 -3.32,2.88 1,4.28L12,15.4z"/>
+</vector>
+-->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARCHIVO 8: res/anim/star_pop.xml
+     Animación "pop" al seleccionar una estrella
+════════════════════════════════════════════════════════════════ -->
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/overshoot_interpolator">
+    <scale
+        android:fromXScale="1.0"
+        android:toXScale="1.3"
+        android:fromYScale="1.0"
+        android:toYScale="1.3"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="150" />
+    <scale
+        android:fromXScale="1.3"
+        android:toXScale="1.0"
+        android:fromYScale="1.3"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="150"
+        android:duration="100" />
+</set>
+-->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     CÓMO INTEGRAR EN TU APP
+     ─────────────────────────────────────────────────────────────
+
+     OPCIÓN A — Disparo automático (recomendado):
+     En MainActivity.onCreate():
+         RatingManager.registrarSesion(this)
+
+     En tu GameFragment, al terminar una partida:
+         RatingManager.registrarPartida(requireContext())
+         RatingManager.mostrarSiCorresponde(requireContext(), parentFragmentManager)
+
+     OPCIÓN B — Botón manual en ajustes o menú:
+         btnCalificarApp.setOnClickListener {
+             RatingManager.mostrarForzado(requireContext(), parentFragmentManager)
+         }
+
+     DEPENDENCIA REQUERIDA en build.gradle (app):
+         implementation 'com.google.android.material:material:1.11.0'
+
+     FUENTES (si no tienes Poppins):
+     - Descarga desde fonts.google.com y coloca en res/font/
+     - O reemplaza @font/poppins_bold y @font/poppins_regular
+       con android:fontFamily="sans-serif" temporalmente
+
+════════════════════════════════════════════════════════════════ -->
