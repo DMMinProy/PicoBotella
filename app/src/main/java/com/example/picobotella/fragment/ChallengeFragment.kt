@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.picobotella.fragment.AddChallengeDialogFragment
 import com.example.picobotella.viewmodel.ChallengeViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -35,9 +36,24 @@ class ChallengeFragment : Fragment() {
 
         adapter = ChallengeAdapter(
             challenges = emptyList(),
-            onEditClick = {
-                // COMMIT 2: aquí irá el diálogo de editar
-                Toast.makeText(requireContext(), "Editar: ${it.description}", Toast.LENGTH_SHORT).show()
+            onEditClick = { challenge ->
+
+                EditChallengeDialogFragment(
+                    currentDescription = challenge.description
+                ) { newDescription ->
+
+                    // TODO SQLITE
+                    // viewModel.update(
+                    //    challenge.copy(description = newDescription)
+                    // )
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Reto actualizado: $newDescription",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }.show(parentFragmentManager, "EDIT_CHALLENGE")
             },
             onDeleteClick = {
                 // HU 9: el compañero lo implementa
@@ -82,7 +98,13 @@ class ChallengeFragment : Fragment() {
         recyclerView.visibility = View.VISIBLE
         // ── FAB (por ahora solo un Toast, mañana abre diálogo) ──
         view.findViewById<FloatingActionButton>(R.id.fab_agregar_challenge).setOnClickListener {
-            Toast.makeText(requireContext(), "¡Mañana aquí va el diálogo!", Toast.LENGTH_SHORT).show()
+            AddChallengeDialogFragment{
+                Toast.makeText(
+                    requireContext(),
+                    "Reto guardado: $it",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }.show(parentFragmentManager, "ADD_CHALLENGE")
         }
 
         // ── Botón atrás ────────────────────────────────────────
