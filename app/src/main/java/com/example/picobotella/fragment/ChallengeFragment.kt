@@ -41,7 +41,7 @@ class ChallengeFragment : Fragment() {
                 EditChallengeDialogFragment(
                     currentDescription = challenge.description
                 ) { newDescription ->
-
+                    //FALTA
                     // TODO SQLITE
                     // viewModel.update(
                     //    challenge.copy(description = newDescription)
