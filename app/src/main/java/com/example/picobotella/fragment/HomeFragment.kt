@@ -75,6 +75,10 @@ class HomeFragment : Fragment() {
                 mediaPlayer?.pause()
             }
         }
+        // Navegar a retos
+        view.findViewById<ImageButton>(R.id.btnAgregar).setOnClickListener {
+            findNavController().navigate(R.id.challengeFragment)
+        }
 
         // Botón estrella: abre la Play Store
         val btnEstrella = view.findViewById<ImageButton>(R.id.btnEstrella)

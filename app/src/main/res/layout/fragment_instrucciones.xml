@@ -15,7 +15,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/instrucciones_toolbar"
+        android:background="#414141"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -53,7 +53,7 @@
                 android:id="@+id/tvTituloComoSeJuega"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cómo se juega"
+                android:text="¿Cómo se juega?"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -64,7 +64,7 @@
                 android:layout_width="48dp"
                 android:layout_height="3dp"
                 android:layout_gravity="start"
-                android:background="@color/instrucciones_acento"
+                android:background="@color/orange"
                 android:layout_marginBottom="16dp" />
 
             <TextView
@@ -83,7 +83,7 @@
                 android:id="@+id/tvTituloQuienGana"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Quién gana"
+                android:text="¿Quién gana?"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -94,7 +94,7 @@
                 android:layout_width="48dp"
                 android:layout_height="3dp"
                 android:layout_gravity="start"
-                android:background="@color/instrucciones_acento"
+                android:background="@color/orange"
                 android:layout_marginBottom="16dp" />
 
             <TextView

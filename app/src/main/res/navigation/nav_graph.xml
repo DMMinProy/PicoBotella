@@ -20,6 +20,7 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+    <!-- Agregar retos -->
     <fragment
         android:id="@+id/challengeFragment"
         android:name="com.example.picobotella.ChallengeFragment"
@@ -31,5 +32,6 @@
         android:id="@+id/instruccionesFragment"
         android:name="com.example.picobotella.InstruccionesFragment"
         android:label="Instrucciones" />
+
 
 </navigation>
