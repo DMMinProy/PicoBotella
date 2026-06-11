@@ -16,7 +16,7 @@ import com.example.picobotella.viewmodel.ChallengeViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ChallengeFragment : Fragment() {
-    //private lateinit var viewModel: ChallengeViewModel
+    private lateinit var viewModel: ChallengeViewModel
     private lateinit var adapter: ChallengeAdapter
 
     override fun onCreateView(
@@ -41,7 +41,7 @@ class ChallengeFragment : Fragment() {
                 EditChallengeDialogFragment(
                     currentDescription = challenge.description
                 ) { newDescription ->
-
+                    //FALTA
                     // TODO SQLITE
                     // viewModel.update(
                     //    challenge.copy(description = newDescription)
@@ -64,48 +64,39 @@ class ChallengeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        // ── ViewModel ─────────────────────────────────────────
-        //viewModel = ViewModelProvider(this)[ChallengeViewModel::class.java]
+         //── ViewModel ──
+        viewModel = ViewModelProvider(this)[ChallengeViewModel::class.java]
 
         // Observar lista: cuando cambia la BD, se actualiza la pantalla sola
-        //viewModel.allRetos.observe(viewLifecycleOwner) { retos ->
-            //adapter.updateList(retos)
+        viewModel.allRetos.observe(viewLifecycleOwner) { retos ->
+            adapter.updateList(retos)
 
             // Mostrar mensaje si no hay retos
-            //if (retos.isEmpty()) {
-                //tvVacia.visibility = View.VISIBLE
-                //recyclerView.visibility = View.GONE
-            //} else {
-                //tvVacia.visibility = View.GONE
-               // recyclerView.visibility = View.VISIBLE
-           // }
-        //}
-        val retosPrueba = listOf(
-            com.example.picobotella.database.Challenge(
-                description = "Tomar un vaso de agua"
-            ),
-            com.example.picobotella.database.Challenge(
-                description = "Cantar una canción"
-            ),
-            com.example.picobotella.database.Challenge(
-                description = "Bailar 10 segundos"
-            )
-        )
-
-        adapter.updateList(retosPrueba)
-
-        tvVacia.visibility = View.GONE
-        recyclerView.visibility = View.VISIBLE
-        // ── FAB (por ahora solo un Toast, mañana abre diálogo) ──
-        view.findViewById<FloatingActionButton>(R.id.fab_agregar_challenge).setOnClickListener {
-            AddChallengeDialogFragment{
-                Toast.makeText(
-                    requireContext(),
-                    "Reto guardado: $it",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }.show(parentFragmentManager, "ADD_CHALLENGE")
+            if (retos.isEmpty()) {
+                tvVacia.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            } else {
+                tvVacia.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
         }
+
+        // ── FAB (por ahora solo un Toast, mañana abre diálogo) ──
+        view.findViewById<FloatingActionButton>(R.id.fab_agregar_challenge)
+            .setOnClickListener {
+
+                AddChallengeDialogFragment { texto ->
+
+                    viewModel.insert(texto)
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Reto guardado: $texto",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }.show(parentFragmentManager, "ADD_CHALLENGE")
+            }
 
         // ── Botón atrás ────────────────────────────────────────
         view.findViewById<View>(R.id.btn_back_challenge).setOnClickListener {
