@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
@@ -19,11 +20,18 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+    <!-- Agregar retos -->
+    <fragment
+        android:id="@+id/challengeFragment"
+        android:name="com.example.picobotella.ChallengeFragment"
+        android:label="Retos"
+        tools:layout="@layout/fragment_challenge" />
 
     <!-- Instrucciones del juego -->
     <fragment
         android:id="@+id/instruccionesFragment"
         android:name="com.example.picobotella.InstruccionesFragment"
         android:label="Instrucciones" />
+
 
 </navigation>
