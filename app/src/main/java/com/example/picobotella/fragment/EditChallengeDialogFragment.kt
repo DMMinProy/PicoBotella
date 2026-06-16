@@ -8,10 +8,12 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import android.text.Editable
 import android.text.TextWatcher
+import com.example.picobotella.database.Challenge
 
 class EditChallengeDialogFragment(
-    private val currentDescription: String,
-    private val onSave: (String) -> Unit
+    private val challenge: Challenge,
+    private val onSave: (Challenge) -> Unit
+
 ) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -29,9 +31,11 @@ class EditChallengeDialogFragment(
         val btnSave =
             view.findViewById<Button>(R.id.btnSave)
 
-        etChallenge.setText(currentDescription)
+        btnSave.isEnabled = true
+        etChallenge.setText(challenge.description)
 
         etChallenge.addTextChangedListener(object : TextWatcher {
+
 
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -62,12 +66,9 @@ class EditChallengeDialogFragment(
             val newText =
                 etChallenge.text.toString().trim()
 
-            onSave(newText)
-
-            // TODO SQLite
-            // viewModel.update(
-            // challenge.copy(description = newText)
-            // )
+            onSave(
+                challenge.copy(description = newText)
+            )
 
             dismiss()
         }

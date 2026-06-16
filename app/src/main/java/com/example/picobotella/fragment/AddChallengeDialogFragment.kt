@@ -40,7 +40,7 @@ class AddChallengeDialogFragment (
                 before: Int,
                 count: Int
             ) {
-
+                //Habilitar/desabilitar boton
                 val enabled = !s.isNullOrBlank()
 
                 btnSave.isEnabled = enabled
@@ -69,12 +69,6 @@ class AddChallengeDialogFragment (
                 etChallenge.text.toString().trim()
 
             onSave(challengeText)
-
-            // TODO SQLite
-            // viewModel.insert(
-            // Challenge(description = challengeText)
-            // )
-
             dismiss()
         }
 

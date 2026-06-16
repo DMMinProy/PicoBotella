@@ -39,17 +39,14 @@ class ChallengeFragment : Fragment() {
             onEditClick = { challenge ->
 
                 EditChallengeDialogFragment(
-                    currentDescription = challenge.description
-                ) { newDescription ->
-                    //FALTA
-                    // TODO SQLITE
-                    // viewModel.update(
-                    //    challenge.copy(description = newDescription)
-                    // )
+                   challenge
+                ) { updateChallenge ->
+
+                    viewModel.update(updateChallenge)
 
                     Toast.makeText(
                         requireContext(),
-                        "Reto actualizado: $newDescription",
+                        "Reto actualizado: ${updateChallenge.description}",
                         Toast.LENGTH_SHORT
                     ).show()
 
