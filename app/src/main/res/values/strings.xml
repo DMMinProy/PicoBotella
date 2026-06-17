@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PicoBotella</string>
+    <string name="delete_question">¿Desea eliminar el siguiente reto?</string>
+    <string name="si">SI</string>
+    <string name="not">NO</string>
+    <string name="desea_eliminar_el_siguiente_reto">¿Desea eliminar el siguiente reto?:</string>
 </resources>
