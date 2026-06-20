@@ -1,0 +1,57 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- TITULO -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/desea_eliminar_el_siguiente_reto"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:gravity="center"/>
+
+    <!-- DESCRIPCION DEL RETO -->
+    <TextView
+        android:id="@+id/txtDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:gravity="center"/>
+
+    <!-- BOTONES COMO TEXTO -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/not"
+            android:textColor="#FF9800"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/btnSi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/si"
+            android:textColor="#FF9800"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginStart="40dp"/>
+    </LinearLayout>
+
+</LinearLayout>

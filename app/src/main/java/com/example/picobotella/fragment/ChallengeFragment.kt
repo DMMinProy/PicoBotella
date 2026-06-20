@@ -12,9 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.picobotella.fragment.AddChallengeDialogFragment
+import com.example.picobotella.fragment.DeleteChallengeDialogFragment
 import com.example.picobotella.viewmodel.ChallengeViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 class ChallengeFragment : Fragment() {
     private lateinit var viewModel: ChallengeViewModel
     private lateinit var adapter: ChallengeAdapter
@@ -52,9 +52,21 @@ class ChallengeFragment : Fragment() {
 
                 }.show(parentFragmentManager, "EDIT_CHALLENGE")
             },
-            onDeleteClick = {
-                // HU 9: el compañero lo implementa
-                Toast.makeText(requireContext(), "Eliminar: ${it.description}", Toast.LENGTH_SHORT).show()
+
+            onDeleteClick = { challenge ->
+
+                DeleteChallengeDialogFragment(challenge) { retoEliminado ->
+
+                    viewModel.delete(retoEliminado)
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Reto eliminado",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }.show(parentFragmentManager, "DELETE_CHALLENGE")
+
             }
         )
 

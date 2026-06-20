@@ -94,6 +94,23 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_instruccionesFragment)
         }
 
+        // Boton de compartir
+        val btnCompartir = view.findViewById<ImageButton>(R.id.btnCompartir)
+
+        btnCompartir.setOnClickListener {
+
+            val mensaje = """
+        App pico botella
+        Solo los valientes lo juegan !!
+        https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es
+    """.trimIndent()
+
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_TEXT, mensaje)
+
+            startActivity(Intent.createChooser(intent, "Compartir vía"))
+        }
         // Animación de press (escalar) en todos los botones de la barra superior
         listOf(
             view.findViewById<ImageButton>(R.id.btnEstrella),
