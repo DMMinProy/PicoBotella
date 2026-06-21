@@ -13,6 +13,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -147,15 +148,35 @@ class HomeFragment : Fragment() {
 
             // Ángulo final: mínimo 3 vueltas completas + posición aleatoria
             val anguloFinal = anguloActual + (3..5).random() * 360f + (0..359).random()
-            val duracion    = (3000..5000).random().toLong()
+            val duracion    = (4000..5000).random().toLong()
+
+
 
             ObjectAnimator.ofFloat(imgBotella, "rotation", anguloActual, anguloFinal).apply {
                 duration = duracion
-                interpolator = DecelerateInterpolator(2f)
+                interpolator = OvershootInterpolator(1.4f)
+
+                addUpdateListener { animation ->
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        try {
+                            // El fraction va de 0.0 (inicio) a 1.0 (final)
+                            val progreso = animation.animatedFraction
+                            val velocidad = 1.0f - (progreso * 0.7f) // Baja de 100% de velocidad a un 30%
+
+                            mediaPlayerGiro?.let { mp ->
+                                if (mp.isPlaying) {
+                                    mp.playbackParams = mp.playbackParams.setSpeed(velocidad)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            // Evita caídas si el MediaPlayer se libera en paralelo
+                        }
+                    }
+                }
+
                 addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        anguloActual = anguloFinal % 360f
-                        imgBotella.rotation = anguloActual
+                        anguloActual = anguloFinal
 
                         mediaPlayerGiro?.stop()
                         mediaPlayerGiro?.release()
