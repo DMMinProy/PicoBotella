@@ -3,6 +3,7 @@ package com.example.picobotella
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.media.MediaPlayer
@@ -18,7 +19,11 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.picobotella.database.Challenge
+import com.example.picobotella.model.PokemonResponse
+import com.example.picobotella.viewmodel.ChallengeViewModel
 
 // Pantalla principal del juego
 class HomeFragment : Fragment() {
@@ -28,6 +33,8 @@ class HomeFragment : Fragment() {
     private var sonidoActivado = true
     private var anguloActual = -25f  // Ángulo inicial (igual que en el XML)
     private var estaGirando = false
+    private val challengeViewModel: ChallengeViewModel by viewModels()
+    private var listaDeRetos: List<Challenge> = emptyList()
 
     companion object {
         const val TAG = "HomeFragment"
@@ -50,6 +57,17 @@ class HomeFragment : Fragment() {
         val tvNumeroJugador = view.findViewById<TextView>(R.id.tvNumeroJugador)
 
         tvNumeroJugador.visibility = View.INVISIBLE
+
+        challengeViewModel.allRetos.observe(viewLifecycleOwner) {retos ->
+            listaDeRetos = retos
+        }
+
+        challengeViewModel.randomPokemon.observe(viewLifecycleOwner) {pokemonData ->
+            if (pokemonData != null) {
+                mostrarDialogoReto(btnGirar, pokemonData)
+                challengeViewModel.clearPokemonState()
+            }
+        }
 
         // Animación de parpadeo del botón "Presióname"
         ObjectAnimator.ofFloat(btnGirar, "alpha", 1f, 0f).apply {
@@ -205,10 +223,59 @@ class HomeFragment : Fragment() {
                     estaGirando = false
                     btnGirar.visibility = View.VISIBLE
                     if (sonidoActivado) mediaPlayer?.start()
-                    // TODO HU-12: lanzar diálogo con reto aleatorio
+                    mostrarDialogoReto(btnGirar)
                 }, 500)
             }
         }.start()
+    }
+
+    /**
+     * Selecciona un reto aleatorio de la lista y lo despliega en un AlertDialog.
+     */
+    private fun mostrarDialogoReto(btnGirar: View, pokemon: PokemonResponse) {
+        val challengeText = if (listaDeRetos.isNotEmpty()) {
+            listaDeRetos.random().description
+        } else {
+            "¡No hay retos guardados! Agrega algunos desde el menú."
+        }
+
+        val pokemonForm = pokemon.forms.firstOrNull()
+        val pokemonName = pokemonForm?.name?.replaceFirstChar { it.uppercase() } ?: "Desconocido"
+        val pokemonId = pokemonForm?.url?.split("/")?.dropLast(1)?.last() ?: "1"
+        val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
+
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_challenge, null)
+
+        // Vincular elementos de la vista personalizada
+        val tvChallengeDescription = dialogView.findViewById<TextView>(R.id.tvChallengeDescription)
+        val btnDismissChallenge = dialogView.findViewById<View>(R.id.btnDismissChallenge)
+
+        tvChallengeDescription.text = challengeText
+
+        // Construir el AlertDialog con la vista personalizada
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false) // No se puede cerrar al hacer click afuera
+            .create()
+
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        btnDismissChallenge.setOnClickListener {
+            dialog.dismiss()
+            restablecerEstadoJuego(btnGirar)
+        }
+
+        dialog.show()
+    }
+
+    /**
+     * Devuelve la interfaz a su estado inicial para permitir un nuevo giro.
+     */
+    private fun restablecerEstadoJuego(btnGirar: View) {
+        estaGirando = false
+        btnGirar.visibility = View.VISIBLE
+        if (sonidoActivado) mediaPlayer?.pause()
     }
 
     fun pausarAudio() { mediaPlayer?.pause() }
