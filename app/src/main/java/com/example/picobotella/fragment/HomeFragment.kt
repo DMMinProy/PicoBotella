@@ -21,6 +21,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.example.picobotella.database.Challenge
 import com.example.picobotella.model.PokemonResponse
 import com.example.picobotella.viewmodel.ChallengeViewModel
@@ -220,10 +221,10 @@ class HomeFragment : Fragment() {
                 tvNumeroJugador.text = "0"
                 tvNumeroJugador.postDelayed({
                     tvNumeroJugador.visibility = View.INVISIBLE
-                    estaGirando = false
-                    btnGirar.visibility = View.VISIBLE
-                    if (sonidoActivado) mediaPlayer?.start()
-                    mostrarDialogoReto(btnGirar)
+
+                    // Dispara la petición de red asíncrona al ViewModel.
+                    // Los observadores en onViewCreated se encargarán de abrir el diálogo al recibir la respuesta.
+                    challengeViewModel.fetchRandomPokemon()
                 }, 500)
             }
         }.start()
@@ -249,8 +250,15 @@ class HomeFragment : Fragment() {
         // Vincular elementos de la vista personalizada
         val tvChallengeDescription = dialogView.findViewById<TextView>(R.id.tvChallengeDescription)
         val btnDismissChallenge = dialogView.findViewById<View>(R.id.btnDismissChallenge)
+        val imgPokemon = dialogView.findViewById<ImageView>(R.id.imgPokemon) // El ImageView de tu círculo
 
-        tvChallengeDescription.text = challengeText
+        tvChallengeDescription.text = "Pokémon: $pokemonName\n\n$challengeText"
+
+        imgPokemon.load(imageUrl) {
+            crossfade(true) // Hace una transición suave tipo "fade-in" cuando termine de descargar
+            placeholder(R.drawable.ic_launcher_background) // Imagen temporal mientras descarga de red
+            error(R.drawable.ic_launcher_background) // Imagen de respaldo por si falla la descarga
+        }
 
         // Construir el AlertDialog con la vista personalizada
         val dialog = AlertDialog.Builder(requireContext())

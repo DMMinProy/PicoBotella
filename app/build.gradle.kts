@@ -61,6 +61,8 @@ dependencies {
 
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    implementation("io.coil-kt:coil:2.6.0")
+
     implementation(
         "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
     )
