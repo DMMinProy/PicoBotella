@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
         tvNumeroJugador.visibility = View.INVISIBLE
 
         challengeViewModel.allRetos.observe(viewLifecycleOwner) {retos ->
-            listaDeRetos = retos
+            listaDeRetos = retos.shuffled()
         }
 
         challengeViewModel.randomPokemon.observe(viewLifecycleOwner) {pokemonData ->
