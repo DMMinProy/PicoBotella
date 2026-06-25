@@ -55,6 +55,14 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    implementation("androidx.fragment:fragment-ktx:1.8.0")
+
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("io.coil-kt:coil:2.6.0")
+
     implementation(
         "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
     )
@@ -77,6 +85,7 @@ dependencies {
         "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation(
         "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+
 
     testImplementation(libs.junit)
 
