@@ -1,8 +1,9 @@
-package com.example.picobotella.database
+package com.example.picobotella.data
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.picobotella.model.Challenge
 
 // le dice a Room qué tablas tiene esta base de datos
 // entities = las tablas (por ahora solo reto)

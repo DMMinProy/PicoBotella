@@ -1,4 +1,4 @@
-package com.example.picobotella.database
+package com.example.picobotella.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

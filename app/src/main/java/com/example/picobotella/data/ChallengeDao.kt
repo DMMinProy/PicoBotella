@@ -1,6 +1,7 @@
-package com.example.picobotella.database
+package com.example.picobotella.data
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.picobotella.model.Challenge
 
 //Se definen las operaciones
 @Dao

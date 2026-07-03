@@ -1,4 +1,5 @@
-package com.example.picobotella
+package com.example.picobotella.view.adapters
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -6,7 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.picobotella.R
-import com.example.picobotella.database.Challenge
+import com.example.picobotella.model.Challenge
 
 // Adapter = le dice al RecyclerView cómo dibujar cada reto en pantalla
 class ChallengeAdapter(

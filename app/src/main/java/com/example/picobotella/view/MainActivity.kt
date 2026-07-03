@@ -1,9 +1,11 @@
-package com.example.picobotella
+package com.example.picobotella.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.picobotella.HomeFragment
+import com.example.picobotella.R
 
 class MainActivity : AppCompatActivity() {
 

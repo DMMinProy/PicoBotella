@@ -4,7 +4,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.picobotella.database.Challenge
+import com.example.picobotella.model.Challenge
 import com.example.picobotella.model.PokemonResponse
 import com.example.picobotella.repository.ChallengeRepo
 import com.example.picobotella.webservice.RetrofitClient

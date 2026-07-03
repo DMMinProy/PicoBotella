@@ -11,8 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.picobotella.fragment.AddChallengeDialogFragment
-import com.example.picobotella.fragment.DeleteChallengeDialogFragment
+import com.example.picobotella.view.adapters.ChallengeAdapter
+import com.example.picobotella.view.fragment.AddChallengeDialogFragment
+import com.example.picobotella.view.fragment.DeleteChallengeDialogFragment
 import com.example.picobotella.viewmodel.ChallengeViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 class ChallengeFragment : Fragment() {
@@ -39,7 +40,7 @@ class ChallengeFragment : Fragment() {
             onEditClick = { challenge ->
 
                 EditChallengeDialogFragment(
-                   challenge
+                    challenge
                 ) { updateChallenge ->
 
                     viewModel.update(updateChallenge)

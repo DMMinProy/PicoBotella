@@ -7,13 +7,13 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -22,7 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import coil.load
-import com.example.picobotella.database.Challenge
+import com.example.picobotella.model.Challenge
 import com.example.picobotella.model.PokemonResponse
 import com.example.picobotella.viewmodel.ChallengeViewModel
 
@@ -176,7 +176,7 @@ class HomeFragment : Fragment() {
                 interpolator = OvershootInterpolator(1.4f)
 
                 addUpdateListener { animation ->
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         try {
                             // El fraction va de 0.0 (inicio) a 1.0 (final)
                             val progreso = animation.animatedFraction
