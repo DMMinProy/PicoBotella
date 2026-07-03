@@ -1,10 +1,12 @@
-package com.example.picobotella
+package com.example.picobotella.view
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.example.picobotella.R
 
 // Pantalla de bienvenida que se muestra al abrir la app por 5 segundos
 class SplashActivity : AppCompatActivity() {

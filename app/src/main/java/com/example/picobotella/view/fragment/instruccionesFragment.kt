@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.picobotella.view.MainActivity
 
 // Pantalla de instrucciones del juego
 class InstruccionesFragment : Fragment() {

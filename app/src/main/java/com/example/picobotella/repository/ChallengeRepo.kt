@@ -1,9 +1,8 @@
 package com.example.picobotella.repository
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.example.picobotella.database.AppDatabase
-import com.example.picobotella.database.Challenge
-import com.example.picobotella.database.ChallengeDao
+import com.example.picobotella.data.AppDatabase
+import com.example.picobotella.model.Challenge
 
 //Este es el puente entre la BD y el ViewModel
 class ChallengeRepo(context: Context) {

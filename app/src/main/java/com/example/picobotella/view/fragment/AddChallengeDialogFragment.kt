@@ -1,5 +1,6 @@
-package com.example.picobotella.fragment
+package com.example.picobotella.view.fragment
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -47,11 +48,11 @@ class AddChallengeDialogFragment (
 
                 if (enabled) {
                     btnSave.setBackgroundColor(
-                        android.graphics.Color.parseColor("#FD3C00")
+                        Color.parseColor("#FD3C00")
                     )
                 } else {
                     btnSave.setBackgroundColor(
-                        android.graphics.Color.parseColor("#D9D9D9")
+                        Color.parseColor("#D9D9D9")
                     )
                 }
             }

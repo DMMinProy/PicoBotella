@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import android.text.Editable
 import android.text.TextWatcher
-import com.example.picobotella.database.Challenge
+import com.example.picobotella.model.Challenge
 
 class EditChallengeDialogFragment(
     private val challenge: Challenge,

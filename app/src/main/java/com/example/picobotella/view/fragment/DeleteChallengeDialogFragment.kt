@@ -1,4 +1,4 @@
-package com.example.picobotella.fragment
+package com.example.picobotella.view.fragment
 
 import android.app.Dialog
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.example.picobotella.R
-import com.example.picobotella.database.Challenge
+import com.example.picobotella.model.Challenge
 
 class DeleteChallengeDialogFragment(
     private val challenge: Challenge,
