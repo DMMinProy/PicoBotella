@@ -5,8 +5,8 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.app.AlertDialog
 import android.content.Intent
-import android.net.Uri
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -15,129 +15,142 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import coil.load
+import com.example.picobotella.databinding.HomefragmentBinding
 import com.example.picobotella.model.Challenge
 import com.example.picobotella.model.PokemonResponse
 import com.example.picobotella.viewmodel.ChallengeViewModel
 
-// Pantalla principal del juego
 class HomeFragment : Fragment() {
 
-    private var mediaPlayer: MediaPlayer? = null       // Música de fondo
-    private var mediaPlayerGiro: MediaPlayer? = null   // Sonido al girar la botella
+    private var _binding: HomefragmentBinding? = null
+    private val binding get() = _binding!!
+
+    private var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayerGiro: MediaPlayer? = null
     private var sonidoActivado = true
-    private var anguloActual = -25f  // Ángulo inicial (igual que en el XML)
+
+    private var anguloActual = -25f
     private var estaGirando = false
+    private var cuentaRegresiva: CountDownTimer? = null
+
     private val challengeViewModel: ChallengeViewModel by viewModels()
     private var listaDeRetos: List<Challenge> = emptyList()
 
     companion object {
         const val TAG = "HomeFragment"
-        const val URL_NEQUI = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es"
+        const val URL_PLAY_STORE = "https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es"
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.homefragment, container, false)
+    ): View {
+        _binding = HomefragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val btnGirar        = view.findViewById<View>(R.id.btnGirar)
-        val imgBotella      = view.findViewById<ImageView>(R.id.imgBotella)
-        val tvNumeroJugador = view.findViewById<TextView>(R.id.tvNumeroJugador)
-
-        tvNumeroJugador.visibility = View.INVISIBLE
-
-        challengeViewModel.allRetos.observe(viewLifecycleOwner) {retos ->
+        binding.tvNumeroJugador.visibility = View.INVISIBLE
+        configurarObservadores()
+        configurarMusica()
+        configurarAnimacionParpadeo()
+        configurarBotones()
+    }
+    private fun configurarObservadores() {
+        challengeViewModel.allRetos.observe(viewLifecycleOwner) { retos ->
             listaDeRetos = retos.shuffled()
         }
 
-        challengeViewModel.randomPokemon.observe(viewLifecycleOwner) {pokemonData ->
+        challengeViewModel.randomPokemon.observe(viewLifecycleOwner) { pokemonData ->
             if (pokemonData != null) {
-                mostrarDialogoReto(btnGirar, pokemonData)
+                mostrarDialogoReto(pokemonData)
                 challengeViewModel.clearPokemonState()
             }
         }
+    }
 
-        // Animación de parpadeo del botón "Presióname"
-        ObjectAnimator.ofFloat(btnGirar, "alpha", 1f, 0f).apply {
+    // ── Música ─────────────────────────────────────────────────────────────
+
+    private fun configurarMusica() {
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.musica_home)?.apply {
+            isLooping = true
+            start()
+        }
+    }
+
+    // ── Animación parpadeo ─────────────────────────────────────────────────
+
+    private fun configurarAnimacionParpadeo() {
+        ObjectAnimator.ofFloat(binding.btnGirar, "alpha", 1f, 0f).apply {
             duration = 500
             repeatMode = ObjectAnimator.REVERSE
             repeatCount = ObjectAnimator.INFINITE
             start()
         }
+    }
 
-        // Iniciar música de fondo en loop
-        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.musica_home)
-        mediaPlayer?.isLooping = true
-        mediaPlayer?.start()
+    // ── Botones ────────────────────────────────────────────────────────────
 
-        // Botón de sonido: alterna entre encendido y apagado
-        val btnSonido = view.findViewById<ImageButton>(R.id.btnSonido)
-        btnSonido.setOnClickListener {
+    private fun configurarBotones() {
+        // Sonido
+        binding.btnSonido.setOnClickListener {
             sonidoActivado = !sonidoActivado
             if (sonidoActivado) {
-                btnSonido.setImageResource(R.drawable.ic_sound)
+                binding.btnSonido.setImageResource(R.drawable.ic_sound)
                 mediaPlayer?.start()
             } else {
-                btnSonido.setImageResource(R.drawable.ic_sound_off)
+                binding.btnSonido.setImageResource(R.drawable.ic_sound_off)
                 mediaPlayer?.pause()
             }
         }
-        // Navegar a retos
-        view.findViewById<ImageButton>(R.id.btnAgregar).setOnClickListener {
-            findNavController().navigate(R.id.challengeFragment)
-        }
 
-        // Botón estrella: abre la Play Store
-        val btnEstrella = view.findViewById<ImageButton>(R.id.btnEstrella)
-        btnEstrella.setOnClickListener {
-            val uri = Uri.parse(URL_NEQUI)
-            val intent = Intent(Intent.ACTION_VIEW, uri)
+        // Estrella → Play Store
+        binding.btnEstrella.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(URL_PLAY_STORE))
             startActivity(intent)
         }
 
-        // Botón de instrucciones
-        val btnJuego = view.findViewById<ImageButton>(R.id.btnJuego)
-        btnJuego.setOnClickListener {
+        // Instrucciones
+        binding.btnJuego.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_instruccionesFragment)
         }
 
-        // Boton de compartir
-        val btnCompartir = view.findViewById<ImageButton>(R.id.btnCompartir)
+        // Retos
+        binding.btnAgregar.setOnClickListener {
+            findNavController().navigate(R.id.challengeFragment)
+        }
 
-        btnCompartir.setOnClickListener {
-
+        // Compartir
+        binding.btnCompartir.setOnClickListener {
             val mensaje = """
-        App pico botella
-        Solo los valientes lo juegan !!
-        https://play.google.com/store/apps/details?id=com.nequi.MobileApp&hl=es_419&gl=es
-    """.trimIndent()
+                App Pico Botella
+                ¡Solo los valientes lo juegan!
+                $URL_PLAY_STORE
+            """.trimIndent()
 
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/plain"
-            intent.putExtra(Intent.EXTRA_TEXT, mensaje)
-
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, mensaje)
+            }
             startActivity(Intent.createChooser(intent, "Compartir vía"))
         }
-        // Animación de press (escalar) en todos los botones de la barra superior
+
+        // Animación press en botones de la barra
         listOf(
-            view.findViewById<ImageButton>(R.id.btnEstrella),
-            view.findViewById<ImageButton>(R.id.btnSonido),
-            view.findViewById<ImageButton>(R.id.btnJuego),
-            view.findViewById<ImageButton>(R.id.btnAgregar),
-            view.findViewById<ImageButton>(R.id.btnCompartir)
+            binding.btnEstrella,
+            binding.btnSonido,
+            binding.btnJuego,
+            binding.btnAgregar,
+            binding.btnCompartir
         ).forEach { boton ->
             boton.setOnTouchListener { v, event ->
                 when (event.action) {
@@ -150,90 +163,85 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Al presionar el botón, gira la botella
-        btnGirar.setOnClickListener {
+        // Girar botella
+        binding.btnGirar.setOnClickListener {
             if (estaGirando) return@setOnClickListener
-
-            estaGirando = true
-            btnGirar.visibility = View.INVISIBLE
-            tvNumeroJugador.visibility = View.INVISIBLE
-
-            if (sonidoActivado) mediaPlayer?.pause()
-
-            // Reproducir sonido de giro en loop
-            mediaPlayerGiro = MediaPlayer.create(requireContext(), R.raw.sonido_botella)
-            mediaPlayerGiro?.isLooping = true
-            mediaPlayerGiro?.start()
-
-            // Ángulo final: mínimo 3 vueltas completas + posición aleatoria
-            val anguloFinal = anguloActual + (3..5).random() * 360f + (0..359).random()
-            val duracion    = (4000..5000).random().toLong()
-
-
-
-            ObjectAnimator.ofFloat(imgBotella, "rotation", anguloActual, anguloFinal).apply {
-                duration = duracion
-                interpolator = OvershootInterpolator(1.4f)
-
-                addUpdateListener { animation ->
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        try {
-                            // El fraction va de 0.0 (inicio) a 1.0 (final)
-                            val progreso = animation.animatedFraction
-                            val velocidad = 1.0f - (progreso * 0.7f) // Baja de 100% de velocidad a un 30%
-
-                            mediaPlayerGiro?.let { mp ->
-                                if (mp.isPlaying) {
-                                    mp.playbackParams = mp.playbackParams.setSpeed(velocidad)
-                                }
-                            }
-                        } catch (e: Exception) {
-                            // Evita caídas si el MediaPlayer se libera en paralelo
-                        }
-                    }
-                }
-
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        anguloActual = anguloFinal
-
-                        mediaPlayerGiro?.stop()
-                        mediaPlayerGiro?.release()
-                        mediaPlayerGiro = null
-
-                        tvNumeroJugador.visibility = View.VISIBLE
-                        iniciarCuentaRegresiva(tvNumeroJugador, btnGirar)
-                    }
-                })
-                start()
-            }
+            girarBotella()
         }
     }
 
-    // Cuenta regresiva 3,2,1,0 tras detener la botella
-    private fun iniciarCuentaRegresiva(tvNumeroJugador: TextView, btnGirar: View) {
-        object : CountDownTimer(4000L, 1000L) {
+    // ── Lógica de giro ─────────────────────────────────────────────────────
+
+    private fun girarBotella() {
+        estaGirando = true
+        binding.btnGirar.visibility = View.INVISIBLE
+        binding.tvNumeroJugador.visibility = View.INVISIBLE
+
+        if (sonidoActivado) mediaPlayer?.pause()
+
+        mediaPlayerGiro?.release()
+        mediaPlayerGiro = MediaPlayer.create(requireContext(), R.raw.sonido_botella)?.apply {
+            isLooping = true
+            start()
+        }
+
+        val anguloFinal = anguloActual + (3..5).random() * 360f + (0..359).random()
+        val duracion = (4000..5000).random().toLong()
+
+        ObjectAnimator.ofFloat(binding.imgBotella, "rotation", anguloActual, anguloFinal).apply {
+            duration = duracion
+            interpolator = OvershootInterpolator(1.4f)
+
+            addUpdateListener { animation ->
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try {
+                        val progreso = animation.animatedFraction
+                        val velocidad = (1.0f - progreso * 0.7f).coerceAtLeast(0.3f)
+                        mediaPlayerGiro?.takeIf { it.isPlaying }?.let {
+                            it.playbackParams = it.playbackParams.setSpeed(velocidad)
+                        }
+                    } catch (e: Exception) { }
+                }
+            }
+
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    anguloActual = anguloFinal % 360f
+                    liberarSonidoGiro()
+                    binding.tvNumeroJugador.visibility = View.VISIBLE
+                    iniciarCuentaRegresiva()
+                }
+            })
+            start()
+        }
+    }
+
+    // ── Cuenta regresiva ───────────────────────────────────────────────────
+
+    private fun iniciarCuentaRegresiva() {
+        cuentaRegresiva?.cancel()
+        cuentaRegresiva = object : CountDownTimer(4000L, 1000L) {
             override fun onTick(millisUntilFinished: Long) {
-                tvNumeroJugador.text = (millisUntilFinished / 1000).toString()
+                binding.tvNumeroJugador.text = (millisUntilFinished / 1000).toString()
             }
 
             override fun onFinish() {
-                tvNumeroJugador.text = "0"
-                tvNumeroJugador.postDelayed({
-                    tvNumeroJugador.visibility = View.INVISIBLE
-
-                    // Dispara la petición de red asíncrona al ViewModel.
-                    // Los observadores en onViewCreated se encargarán de abrir el diálogo al recibir la respuesta.
-                    challengeViewModel.fetchRandomPokemon()
+                binding.tvNumeroJugador.text = "0"
+                binding.tvNumeroJugador.postDelayed({
+                    if (isAdded) {
+                        binding.tvNumeroJugador.visibility = View.INVISIBLE
+                        challengeViewModel.fetchRandomPokemon()
+                    }
                 }, 500)
             }
         }.start()
     }
 
-    /**
-     * Selecciona un reto aleatorio de la lista y lo despliega en un AlertDialog.
-     */
-    private fun mostrarDialogoReto(btnGirar: View, pokemon: PokemonResponse) {
+    // ── Diálogo de reto ────────────────────────────────────────────────────
+
+    private fun mostrarDialogoReto(pokemon: PokemonResponse) {
+        if (!isAdded) return
+
         val challengeText = if (listaDeRetos.isNotEmpty()) {
             listaDeRetos.random().description
         } else {
@@ -242,55 +250,59 @@ class HomeFragment : Fragment() {
 
         val pokemonForm = pokemon.forms.firstOrNull()
         val pokemonName = pokemonForm?.name?.replaceFirstChar { it.uppercase() } ?: "Desconocido"
-        val pokemonId = pokemonForm?.url?.split("/")?.dropLast(1)?.last() ?: "1"
-        val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
+        val pokemonId   = pokemonForm?.url?.trimEnd('/')?.substringAfterLast("/") ?: "1"
+        val imageUrl    = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
 
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_challenge, null)
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_challenge, null)
 
-        // Vincular elementos de la vista personalizada
-        val tvChallengeDescription = dialogView.findViewById<TextView>(R.id.tvChallengeDescription)
-        val btnDismissChallenge = dialogView.findViewById<View>(R.id.btnDismissChallenge)
-        val imgPokemon = dialogView.findViewById<ImageView>(R.id.imgPokemon) // El ImageView de tu círculo
+        dialogView.findViewById<TextView>(R.id.tvChallengeDescription).text =
+            "Pokémon: $pokemonName\n\n$challengeText"
 
-        tvChallengeDescription.text = "Pokémon: $pokemonName\n\n$challengeText"
-
-        imgPokemon.load(imageUrl) {
-            crossfade(true) // Hace una transición suave tipo "fade-in" cuando termine de descargar
-            placeholder(R.drawable.ic_launcher_background) // Imagen temporal mientras descarga de red
-            error(R.drawable.ic_launcher_background) // Imagen de respaldo por si falla la descarga
+        dialogView.findViewById<ImageView>(R.id.imgPokemon).load(imageUrl) {
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background)
+            error(R.drawable.ic_launcher_background)
         }
 
-        // Construir el AlertDialog con la vista personalizada
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setCancelable(false) // No se puede cerrar al hacer click afuera
+            .setCancelable(false)
             .create()
-
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        btnDismissChallenge.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnDismissChallenge).setOnClickListener {
             dialog.dismiss()
-            restablecerEstadoJuego(btnGirar)
+            restablecerEstadoJuego()
         }
 
         dialog.show()
     }
 
-    /**
-     * Devuelve la interfaz a su estado inicial para permitir un nuevo giro.
-     */
-    private fun restablecerEstadoJuego(btnGirar: View) {
+    // ── Estado del juego ───────────────────────────────────────────────────
+
+    private fun restablecerEstadoJuego() {
         estaGirando = false
-        btnGirar.visibility = View.VISIBLE
-        if (sonidoActivado) mediaPlayer?.pause()
+        binding.btnGirar.visibility = View.VISIBLE
+        if (sonidoActivado) mediaPlayer?.start()
     }
+
+    private fun liberarSonidoGiro() {
+        mediaPlayerGiro?.stop()
+        mediaPlayerGiro?.release()
+        mediaPlayerGiro = null
+    }
+
+    // ── Audio público ──────────────────────────────────────────────────────
 
     fun pausarAudio() { mediaPlayer?.pause() }
 
     fun reanudarAudioSiCorresponde() {
         if (sonidoActivado) mediaPlayer?.start()
     }
+
+    // ── Ciclo de vida ──────────────────────────────────────────────────────
 
     override fun onPause() {
         super.onPause()
@@ -305,7 +317,10 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        cuentaRegresiva?.cancel()
+        cuentaRegresiva = null
         mediaPlayer?.stop(); mediaPlayer?.release(); mediaPlayer = null
         mediaPlayerGiro?.stop(); mediaPlayerGiro?.release(); mediaPlayerGiro = null
+        _binding = null  // ← siempre al final
     }
 }

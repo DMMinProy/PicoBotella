@@ -4,113 +4,117 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.picobotella.databinding.FragmentChallengeBinding
 import com.example.picobotella.view.adapters.ChallengeAdapter
 import com.example.picobotella.view.fragment.AddChallengeDialogFragment
 import com.example.picobotella.view.fragment.DeleteChallengeDialogFragment
 import com.example.picobotella.viewmodel.ChallengeViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 class ChallengeFragment : Fragment() {
-    private lateinit var viewModel: ChallengeViewModel
+
+    // ── ViewBinding ────────────────────────────────────────────────────────
+    private var _binding: FragmentChallengeBinding? = null
+    private val binding get() = _binding!!
+
+    // ── ViewModel ──────────────────────────────────────────────────────────
+    private val viewModel: ChallengeViewModel by viewModels()  // ← forma moderna, sin ViewModelProvider
+
+    // ── Adapter ───────────────────────────────────────────────────────────
     private lateinit var adapter: ChallengeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_challenge, container, false)
+    ): View {
+        _binding = FragmentChallengeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ── RecyclerView ───
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_challenges)
-        val tvVacia = view.findViewById<TextView>(R.id.tv_lista_vacia)
+        configurarAdapter()
+        configurarRecyclerView()
+        configurarObservadores()
+        configurarBotones()
+    }
 
+    // ── Adapter ────────────────────────────────────────────────────────────
+
+    private fun configurarAdapter() {
         adapter = ChallengeAdapter(
             challenges = emptyList(),
             onEditClick = { challenge ->
-
-                EditChallengeDialogFragment(
-                    challenge
-                ) { updateChallenge ->
-
-                    viewModel.update(updateChallenge)
-
+                EditChallengeDialogFragment(challenge) { updatedChallenge ->
+                    viewModel.update(updatedChallenge)
                     Toast.makeText(
                         requireContext(),
-                        "Reto actualizado: ${updateChallenge.description}",
+                        "Reto actualizado: ${updatedChallenge.description}",
                         Toast.LENGTH_SHORT
                     ).show()
-
                 }.show(parentFragmentManager, "EDIT_CHALLENGE")
             },
-
             onDeleteClick = { challenge ->
-
-                DeleteChallengeDialogFragment(challenge) { retoEliminado ->
-
-                    viewModel.delete(retoEliminado)
-
+                DeleteChallengeDialogFragment(challenge) { deletedChallenge ->
+                    viewModel.delete(deletedChallenge)
                     Toast.makeText(
                         requireContext(),
                         "Reto eliminado",
                         Toast.LENGTH_SHORT
                     ).show()
-
                 }.show(parentFragmentManager, "DELETE_CHALLENGE")
-
             }
         )
+    }
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
+    // ── RecyclerView ───────────────────────────────────────────────────────
 
-         //── ViewModel ──
-        viewModel = ViewModelProvider(this)[ChallengeViewModel::class.java]
+    private fun configurarRecyclerView() {
+        binding.recyclerChallenges.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerChallenges.adapter = adapter
+    }
 
-        // Observar lista: cuando cambia la BD, se actualiza la pantalla sola
+    // ── Observadores ───────────────────────────────────────────────────────
+
+    private fun configurarObservadores() {
         viewModel.allRetos.observe(viewLifecycleOwner) { retos ->
             adapter.updateList(retos)
 
-            // Mostrar mensaje si no hay retos
-            if (retos.isEmpty()) {
-                tvVacia.visibility = View.VISIBLE
-                recyclerView.visibility = View.GONE
-            } else {
-                tvVacia.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
-            }
+            val listaVacia = retos.isEmpty()
+            binding.tvListaVacia.visibility = if (listaVacia) View.VISIBLE else View.GONE
+            binding.recyclerChallenges.visibility = if (listaVacia) View.GONE else View.VISIBLE
+        }
+    }
+
+    // ── Botones ────────────────────────────────────────────────────────────
+
+    private fun configurarBotones() {
+        binding.fabAgregarChallenge.setOnClickListener {
+            AddChallengeDialogFragment { texto ->
+                viewModel.insert(texto)
+                Toast.makeText(
+                    requireContext(),
+                    "Reto guardado: $texto",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }.show(parentFragmentManager, "ADD_CHALLENGE")
         }
 
-        // ── FAB (por ahora solo un Toast, mañana abre diálogo) ──
-        view.findViewById<FloatingActionButton>(R.id.fab_agregar_challenge)
-            .setOnClickListener {
-
-                AddChallengeDialogFragment { texto ->
-
-                    viewModel.insert(texto)
-
-                    Toast.makeText(
-                        requireContext(),
-                        "Reto guardado: $texto",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                }.show(parentFragmentManager, "ADD_CHALLENGE")
-            }
-
-        // ── Botón atrás ────────────────────────────────────────
-        view.findViewById<View>(R.id.btn_back_challenge).setOnClickListener {
+        binding.btnBackChallenge.setOnClickListener {
             findNavController().navigateUp()
         }
+    }
+
+    // ── Ciclo de vida ──────────────────────────────────────────────────────
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
