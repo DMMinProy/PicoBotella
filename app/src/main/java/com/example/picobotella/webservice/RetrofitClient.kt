@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private val BASE_URL = "https://pokeapi.co/api/v2/"
+    private val BASE_URL = "https://raw.githubusercontent.com/"
     // El cliente se inicializa únicamente la primera vez que se accede a él
     val apiService: PokemonApiService by lazy {
         Retrofit.Builder()

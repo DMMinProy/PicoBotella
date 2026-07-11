@@ -2,83 +2,54 @@ package com.example.picobotella
 
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.Button
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
-import com.google.android.material.textfield.TextInputEditText
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import com.example.picobotella.databinding.DialogEditChallengeBinding
 import com.example.picobotella.model.Challenge
 
 class EditChallengeDialogFragment(
     private val challenge: Challenge,
     private val onSave: (Challenge) -> Unit
-
 ) : DialogFragment() {
+
+    private var _binding: DialogEditChallengeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val view = requireActivity()
-            .layoutInflater
-            .inflate(R.layout.dialog_edit_challenge, null)
+        _binding = DialogEditChallengeBinding.inflate(requireActivity().layoutInflater)
 
-        val etChallenge =
-            view.findViewById<TextInputEditText>(R.id.etChallenge)
+        binding.etChallenge.setText(challenge.description)
+        binding.btnSave.isEnabled = true
 
-        val btnCancel =
-            view.findViewById<Button>(R.id.btnCancel)
-
-        val btnSave =
-            view.findViewById<Button>(R.id.btnSave)
-
-        btnSave.isEnabled = true
-        etChallenge.setText(challenge.description)
-
-        etChallenge.addTextChangedListener(object : TextWatcher {
-
-
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-
-                btnSave.isEnabled = !s.isNullOrBlank()
-            }
-
+        binding.etChallenge.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.btnSave.isEnabled = !s.isNullOrBlank()
+            }
         })
 
-        btnCancel.setOnClickListener {
+        binding.btnCancel.setOnClickListener {
             dismiss()
         }
 
-        btnSave.setOnClickListener {
-
-            val newText =
-                etChallenge.text.toString().trim()
-
-            onSave(
-                challenge.copy(description = newText)
-            )
-
+        binding.btnSave.setOnClickListener {
+            val newText = binding.etChallenge.text.toString().trim()
+            onSave(challenge.copy(description = newText))
             dismiss()
         }
 
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(view)
+        return AlertDialog.Builder(requireContext())
+            .setView(binding.root)
             .create()
+            .also { it.setCanceledOnTouchOutside(false) }
+    }
 
-        dialog.setCanceledOnTouchOutside(false)
-
-        return dialog
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

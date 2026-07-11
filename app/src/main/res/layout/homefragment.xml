@@ -75,8 +75,8 @@
     <!-- Botella girada en el centro -->
     <ImageView
         android:id="@+id/imgBotella"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
+        android:layout_width="320dp"
+        android:layout_height="400dp"
         android:layout_centerInParent="true"
         android:src="@drawable/bottel"
         android:rotation="-25"

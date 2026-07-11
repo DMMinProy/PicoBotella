@@ -9,17 +9,21 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.picobotella.databinding.FragmentInstruccionesBinding
 import com.example.picobotella.view.MainActivity
 
 // Pantalla de instrucciones del juego
 class InstruccionesFragment : Fragment() {
+    private var _binding: FragmentInstruccionesBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_instrucciones, container, false)
+    ): View {
+        _binding = FragmentInstruccionesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,16 +33,14 @@ class InstruccionesFragment : Fragment() {
         pausarAudioHome()
 
         // Cargar GIF del trofeo con Glide
-        val ivTriunfo = view.findViewById<ImageView>(R.id.ivTriunfo)
         Glide.with(this)
             .asGif()
             .load(R.raw.triunfo)
-            .into(ivTriunfo)
+            .into(binding.ivTriunfo)
     }
 
     private fun configurarToolbar(view: View) {
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbarInstrucciones)
-        toolbar.setNavigationOnClickListener { volverAlHome() }
+        binding.toolbarInstrucciones.setNavigationOnClickListener { volverAlHome() }
     }
 
     private fun pausarAudioHome() {
@@ -53,6 +55,7 @@ class InstruccionesFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         // Cubre el caso de salida sin usar el botón de regreso
         (activity as? MainActivity)?.reanudarAudioHomeSiCorresponde()
     }

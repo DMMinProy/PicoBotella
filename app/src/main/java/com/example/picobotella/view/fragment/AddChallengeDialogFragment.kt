@@ -1,84 +1,55 @@
 package com.example.picobotella.view.fragment
+
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Button
-import com.google.android.material.textfield.TextInputEditText
-import androidx.fragment.app.DialogFragment
 import androidx.appcompat.app.AlertDialog
-import com.example.picobotella.R
+import androidx.fragment.app.DialogFragment
+import com.example.picobotella.databinding.DialogAddChallengeBinding
 
-class AddChallengeDialogFragment (
+class AddChallengeDialogFragment(
     private val onSave: (String) -> Unit
 ) : DialogFragment() {
 
+    private var _binding: DialogAddChallengeBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val view = requireActivity()
-            .layoutInflater
-            .inflate(R.layout.dialog_add_challenge, null)
+        _binding = DialogAddChallengeBinding.inflate(requireActivity().layoutInflater)
 
-        val etChallenge = view.findViewById<TextInputEditText>(R.id.etChallenge)
-        val btnSave = view.findViewById<Button>(R.id.btnSave)
-        val btnCancel = view.findViewById<Button>(R.id.btnCancel)
+        binding.btnSave.isEnabled = false
 
-        btnSave.isEnabled = false
-
-        etChallenge.addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                //Habilitar/desabilitar boton
-                val enabled = !s.isNullOrBlank()
-
-                btnSave.isEnabled = enabled
-
-                if (enabled) {
-                    btnSave.setBackgroundColor(
-                        Color.parseColor("#FD3C00")
-                    )
-                } else {
-                    btnSave.setBackgroundColor(
-                        Color.parseColor("#D9D9D9")
-                    )
-                }
-            }
-
+        binding.etChallenge.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val enabled = !s.isNullOrBlank()
+                binding.btnSave.isEnabled = enabled
+                binding.btnSave.setBackgroundColor(
+                    if (enabled) Color.parseColor("#FD3C00")
+                    else Color.parseColor("#D9D9D9")
+                )
+            }
         })
 
-        btnCancel.setOnClickListener {
+        binding.btnCancel.setOnClickListener { dismiss() }
+
+        binding.btnSave.setOnClickListener {
+            onSave(binding.etChallenge.text.toString().trim())
             dismiss()
         }
 
-        btnSave.setOnClickListener {
-
-            val challengeText =
-                etChallenge.text.toString().trim()
-
-            onSave(challengeText)
-            dismiss()
-        }
-
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(view)
+        return AlertDialog.Builder(requireContext())
+            .setView(binding.root)
             .create()
+            .also { it.setCanceledOnTouchOutside(false) }
+    }
 
-        dialog.setCanceledOnTouchOutside(false)
-
-        return dialog
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

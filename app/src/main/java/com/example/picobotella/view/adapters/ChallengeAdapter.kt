@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.picobotella.R
+import com.example.picobotella.databinding.ItemChallengeBinding
 import com.example.picobotella.model.Challenge
 
 // Adapter = le dice al RecyclerView cómo dibujar cada reto en pantalla
@@ -17,31 +18,33 @@ class ChallengeAdapter(
 ) : RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
 
     // ViewHolder = representa visualmente UNA fila de la lista
-    inner class ChallengeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvDescripcion: TextView = itemView.findViewById(R.id.tv_descripcion_challenge)
-        val btnEditar: ImageButton = itemView.findViewById(R.id.btn_edit_challenge)
-        val btnEliminar: ImageButton = itemView.findViewById(R.id.btn_delete_challenge)
+    inner class ChallengeViewHolder(private val binding: ItemChallengeBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(challenge: Challenge) {
+            binding.tvDescripcionChallenge.text = challenge.description
+
+            binding.btnEditChallenge.setOnClickListener {
+                animarBoton(it) {onEditClick(challenge)}
+            }
+
+            binding.btnDeleteChallenge.setOnClickListener {
+                animarBoton(it) {onDeleteClick(challenge)}
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChallengeViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_challenge, parent, false)
-        return ChallengeViewHolder(view)
+        val binding = ItemChallengeBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+
+        return ChallengeViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ChallengeViewHolder, position: Int) {
         val challenge = challenges[position]
-        holder.tvDescripcion.text = challenge.description
-
-        // Animación sutil al tocar editar (HU 6 - Criterio 7)
-        holder.btnEditar.setOnClickListener {
-            animarBoton(it) { onEditClick(challenge) }
-        }
-
-        // Animación sutil al tocar eliminar
-        holder.btnEliminar.setOnClickListener {
-            animarBoton(it) { onDeleteClick(challenge) }
-        }
+        holder.bind(challenge)
     }
 
     override fun getItemCount() = challenges.size
