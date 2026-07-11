@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import coil.load
+import com.example.picobotella.databinding.DialogChallengeBinding
 import com.example.picobotella.databinding.HomefragmentBinding
 import com.example.picobotella.model.Challenge
 import com.example.picobotella.model.PokemonResponse
@@ -53,6 +54,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = HomefragmentBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -248,31 +250,26 @@ class HomeFragment : Fragment() {
             "¡No hay retos guardados! Agrega algunos desde el menú."
         }
 
-        val pokemonForm = pokemon.forms.firstOrNull()
-        val pokemonName = pokemonForm?.name?.replaceFirstChar { it.uppercase() } ?: "Desconocido"
-        val pokemonId   = pokemonForm?.url?.trimEnd('/')?.substringAfterLast("/") ?: "1"
-        val imageUrl    = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
+        val pokemonName = pokemon.name.replaceFirstChar { it.uppercase() }
+        val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png"
+        val dialogBinding = DialogChallengeBinding.inflate(LayoutInflater.from(requireContext()))
 
-        val dialogView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.dialog_challenge, null)
+        dialogBinding.tvChallengeDescription.text = "Pokémon: $pokemonName\n\n$challengeText"
 
-        dialogView.findViewById<TextView>(R.id.tvChallengeDescription).text =
-            "Pokémon: $pokemonName\n\n$challengeText"
-
-        dialogView.findViewById<ImageView>(R.id.imgPokemon).load(imageUrl) {
+        dialogBinding.imgPokemon.load(imageUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_background)
             error(R.drawable.ic_launcher_background)
         }
 
         val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
+            .setView(dialogBinding.root)
             .setCancelable(false)
             .create()
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogView.findViewById<View>(R.id.btnDismissChallenge).setOnClickListener {
+        dialogBinding.btnDismissChallenge.setOnClickListener {
             dialog.dismiss()
             restablecerEstadoJuego()
         }
